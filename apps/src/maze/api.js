@@ -362,5 +362,7 @@ exports.atSprout = API_FUNCTION(function (id) {
 exports.collect = API_FUNCTION(function (id) {
   var col = Maze.pegmanX;
   var row = Maze.pegmanY;
-  Maze.subtype.collect(id, row, col);
+  if (Maze.subtype.collect(row, col)) {
+    Maze.executionInfo.queueAction('pickup', id);
+  }
 });
