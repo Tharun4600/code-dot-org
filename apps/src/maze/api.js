@@ -304,15 +304,21 @@ exports.honeyCreated = API_FUNCTION(function (id) {
  */
 
 exports.getCorn = API_FUNCTION(function (id) {
-  Maze.subtype.getCorn(id);
+  if (Maze.subtype.getCorn()) {
+    Maze.executionInfo.queueAction("get_corn", id);
+  }
 });
 
 exports.getPumpkin = API_FUNCTION(function (id) {
-  Maze.subtype.getPumpkin(id);
+  if (Maze.subtype.getPumpkin()) {
+    Maze.executionInfo.queueAction("get_pumpkin", id);
+  }
 });
 
 exports.getLettuce = API_FUNCTION(function (id) {
-  Maze.subtype.getLettuce(id);
+  if (Maze.subtype.getLettuce()) {
+    Maze.executionInfo.queueAction("get_lettuce", id);
+  }
 });
 
 exports.atCorn = API_FUNCTION(function (id) {
