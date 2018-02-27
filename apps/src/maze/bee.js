@@ -2,9 +2,6 @@ import { randomValue } from '../utils';
 import Gatherer from './gatherer';
 import BeeCell from './beeCell';
 import BeeItemDrawer from './beeItemDrawer';
-import {
-  BeeTerminationValue as TerminationValue
-} from '../constants.js';
 
 const UNLIMITED_HONEY = -99;
 const UNLIMITED_NECTAR = 99;
@@ -274,6 +271,28 @@ export default class Bee extends Gatherer {
     this.nectars_.push({ row, col });
   }
 
+  // Overridable termination handler methods
+
+  onNotAtFlower = () => {};
+  setNotAtFlowerHandler(handler) {
+    this.onNotAtFlower = handler;
+  }
+
+  onFlowerEmpty = () => {};
+  setFlowerEmptyHandler(handler) {
+    this.onFlowerEmpty = handler;
+  }
+
+  onNotAtHive = () => {};
+  setNotAtHiveHandler(handler) {
+    this.onNotAtHive = handler;
+  }
+
+  onHiveFull = () => {};
+  setHiveFullHandler(handler) {
+    this.onHiveFull = handler;
+  }
+
   // API
 
   getNectar(id) {
@@ -282,12 +301,12 @@ export default class Bee extends Gatherer {
 
     // Make sure we're at a flower.
     if (!this.isFlower(row, col)) {
-      this.maze_.executionInfo.terminateWithValue(TerminationValue.NOT_AT_FLOWER);
+      this.onNotAtFlower();
       return;
     }
     // Nectar is positive.  Make sure we have it.
     if (this.flowerRemainingCapacity(row, col) === 0) {
-      this.maze_.executionInfo.terminateWithValue(TerminationValue.FLOWER_EMPTY);
+      this.onFlowerEmpty();
       return;
     }
 
@@ -301,11 +320,11 @@ export default class Bee extends Gatherer {
     const row = this.maze_.pegmanY;
 
     if (!this.isHive(row, col)) {
-      this.maze_.executionInfo.terminateWithValue(TerminationValue.NOT_AT_HONEYCOMB);
+      this.onNotAtHive();
       return;
     }
     if (this.hiveRemainingCapacity(row, col) === 0) {
-      this.maze_.executionInfo.terminateWithValue(TerminationValue.HONEYCOMB_FULL);
+      this.onHiveFull();
       return;
     }
 
